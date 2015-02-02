@@ -12,6 +12,8 @@ module EventedSpec
     class CoolioExample < EventedExample
       # see {EventedExample#run}
       def run
+        require 'cool.io'
+        require 'cool.io/dsl'
         reset
         delayed(0) do
           begin
