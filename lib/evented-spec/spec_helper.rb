@@ -103,7 +103,7 @@ module EventedSpec
     #
     # @return [Hash] default option for currently running example
     def default_options
-      @default_options ||= self.class.default_options.dup rescue {}
+      @default_options ||= (self.class.default_options.dup rescue {})
     end
 
     # Executes an operation after certain delay
