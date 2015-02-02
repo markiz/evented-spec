@@ -1,4 +1,4 @@
-source :rubygems
+source 'https://rubygems.org'
 
 # Use local clones if possible.
 def custom_gem(name, options = Hash.new)
@@ -34,7 +34,5 @@ group :test do
 
   gem "eventmachine"
   gem "cool.io",             :platforms => :ruby
-  custom_gem "amq-client",   :git => "git://github.com/ruby-amqp/amq-client.git"
-  custom_gem "amq-protocol", :git => "git://github.com/ruby-amqp/amq-protocol.git"
-  custom_gem "amqp",         :git => "git://github.com/ruby-amqp/amqp.git", :branch => "master"
+  custom_gem "amqp", :git => "git://github.com/ruby-amqp/amqp.git", :branch => "master"
 end
