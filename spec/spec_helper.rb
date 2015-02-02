@@ -1,5 +1,3 @@
-#$LOAD_PATH << "." unless $LOAD_PATH.include? "." # moronic 1.9.2 breaks things bad
-
 require 'bundler'
 Bundler.setup
 Bundler.require :default, :test
@@ -7,7 +5,6 @@ Bundler.require :default, :test
 require 'yaml'
 require 'evented-spec'
 require 'evented-spec/adapters/adapter_seg'
-
 
 require 'amqp'
 begin
@@ -28,6 +25,16 @@ end
 RSpec.configure do |c|
   c.filter_run_excluding :nojruby => true if RUBY_PLATFORM =~ /java/
   c.filter_run_excluding :deliberately_failing => true if ENV["EXCLUDE_DELIBERATELY_FAILING_SPECS"]
+
+  if RSpec::Core::Version::STRING >= '3.0.0'
+    c.expect_with :rspec do |c|
+      c.syntax = [:should, :expect]
+    end
+
+    c.mock_with :rspec do |mocks|
+      mocks.syntax = :should
+    end
+  end
 end
 
 amqp_config = File.dirname(__FILE__) + '/amqp.yml'

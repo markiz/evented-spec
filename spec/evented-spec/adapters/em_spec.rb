@@ -9,19 +9,18 @@ describe EventedSpec::SpecHelper, "EventMachine bindings" do
   end # em_running?
 
   after(:each) {
-    em_running?.should be_false
+    em_running?.should == false
   }
 
-  let(:method_name) { "em" }
-  let(:prefix) { "em_" }
-
-  it_should_behave_like "EventedSpec adapter"
+  context "shared examples", :adapter => "em" do
+    it_should_behave_like "EventedSpec adapter"
+  end
 
 
   describe EventedSpec::EMSpec do
     include EventedSpec::EMSpec
     it "should run inside of em loop" do
-      em_running?.should be_true
+      em_running?.should == true
       done
     end
   end

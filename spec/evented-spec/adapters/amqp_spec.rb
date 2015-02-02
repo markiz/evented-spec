@@ -1,5 +1,4 @@
 require 'spec_helper'
-
 describe EventedSpec::SpecHelper, "AMQP bindings" do
   include EventedSpec::SpecHelper
   default_timeout 0.5
@@ -8,15 +7,14 @@ describe EventedSpec::SpecHelper, "AMQP bindings" do
     EM.reactor_running? && !!AMQP.connection
   end # em_running?
 
-  let(:method_name) { "amqp" }
-  let(:prefix) { "amqp_" }
-
-  it_should_behave_like "EventedSpec adapter"
+  context "shared examples", :adapter => 'amqp' do
+    it_should_behave_like "EventedSpec adapter"
+  end
 
   describe EventedSpec::AMQPSpec do
     include EventedSpec::AMQPSpec
     it "should run inside of amqp block" do
-      amqp_running?.should be_true
+      amqp_running?.should == true
       done
     end
   end

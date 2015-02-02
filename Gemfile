@@ -14,6 +14,7 @@ group :development do
   gem "rake"
   gem "yard"
   gem "RedCloth", "~> 4.2.9"
+  gem "pry"
 end
 
 group :test do
@@ -26,7 +27,8 @@ group :test do
     gem 'win32console'
     gem 'rspec', '~>1.3.0', :require => 'spec'
   else
-    gem 'rspec', '~> 2.5.0', :require => nil
+    rspec_version = ENV.fetch('RSPEC', '3.1.0')
+    gem 'rspec', rspec_version, :require => nil
   end
   gem 'minitest', :require => nil
 

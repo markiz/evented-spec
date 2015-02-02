@@ -8,4 +8,7 @@ rvm:
   - jruby-18mode
   - jruby-19mode
   - jruby-head
+env:
+  - RSPEC="2.5.0"
+  - RSPEC="3.1.0"
 script: "bundle exec rake spec:ci"

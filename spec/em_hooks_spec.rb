@@ -1,20 +1,19 @@
 require 'spec_helper'
-
 # Registers specific hook type as being called,
 # sets expectations about EM reactor and AMQP connection state
 module HookHelper
   def hook(type, reactor, connection)
     @hooks_called << type.to_sym if type
     if :reactor_running == reactor
-      EM.reactor_running?.should be_true
+      EM.reactor_running?.should == true
     else
-      EM.reactor_running?.should be_false
+      EM.reactor_running?.should == false
     end
     if :amqp_connected == connection
       AMQP.connection.should be_connected
     else
       if AMQP.connection
-        AMQP.connection.connected?.should be_false
+        AMQP.connection.connected?.should == false
       end
     end
   end

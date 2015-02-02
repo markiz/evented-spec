@@ -1,16 +1,20 @@
 # Our assumptions with this seg:
-#   - let(:prefix) is defined (e.g. 'coolio_')
-#   - let(:method_name) is defined (e.g. 'coolio')
+#   - metadata[:adapter] is defined (e.g. 'coolio')
+#   - metadata[:prefix] is defined whenever neccessary (e.g. 'coolio_')
+#   - metadata[:method_name] is defined whenever neccessary (e.g. 'coolio')
 #   - #{prefix}running? method is defined in example group, it is true inside
 #     #{method_name} call block, and false outside of it
 #
 shared_examples_for "EventedSpec adapter" do
-  # Unfortunately, I know no other way to extract variables from let(...)
-  prefix      = self.new.prefix
-  method_name = self.new.method_name
+  adapter = metadata.fetch(:adapter)
+  prefix  = metadata.fetch(:prefix, adapter + "_")
+  method_name = metadata.fetch(:method_name, adapter)
+
+  let(:prefix) { prefix }
+  let(:method_name) { method_name }
 
   def loop_running?
-    send("#{prefix}running?")
+    !!send("#{prefix}running?")
   end
 
   def loop(*args)
@@ -19,12 +23,12 @@ shared_examples_for "EventedSpec adapter" do
     end
   end
 
-  before(:each) { loop_running?.should be_false }
-  after(:each) { loop_running?.should be_false }
+  before(:each) { loop_running?.should == false }
+  after(:each) { loop_running?.should == false }
 
   describe "sanity check:" do
     it "we should not be in #{method_name} loop unless explicitly asked" do
-      loop_running?.should be_false
+      loop_running?.should == false
     end
   end
 
@@ -41,7 +45,7 @@ shared_examples_for "EventedSpec adapter" do
 
     it "should start default event loop and give control" do
       loop do
-        loop_running?.should be_true
+        loop_running?.should == true
         done
       end
     end
@@ -50,7 +54,7 @@ shared_examples_for "EventedSpec adapter" do
       loop do
         done
       end
-      loop_running?.should be_false
+      loop_running?.should == false
     end
 
     it "should raise SpecTimeoutExceededError when #done is not issued" do
@@ -77,7 +81,7 @@ shared_examples_for "EventedSpec adapter" do
           @variable = true
         end
       end
-      @variable.should be_true
+      @variable.should == true
     end
 
     it "should cancel timeout" do
@@ -93,12 +97,12 @@ shared_examples_for "EventedSpec adapter" do
     context "before" do
       send("#{prefix}before") do
         @called_back = true
-        loop_running?.should be_true
+        loop_running?.should == true
       end
 
       it "should run before example starts" do
         loop do
-          @called_back.should be_true
+          @called_back.should == true
           done
         end
       end
@@ -107,15 +111,15 @@ shared_examples_for "EventedSpec adapter" do
     context "after" do
       send("#{prefix}after") do
         @called_back = true
-        loop_running?.should be_true
+        loop_running?.should == true
       end
 
       it "should run after example finishes" do
         loop do
-          @called_back.should be_false
+          !!@called_back.should == false
           done
         end
-        @called_back.should be_true
+        @called_back.should == true
       end
     end
   end
@@ -135,7 +139,7 @@ shared_examples_for "EventedSpec adapter" do
       loop(:spec_timeout => 3) do
         @instance_var = true
         delayed(0.1) do
-          @instance_var.should be_true
+          @instance_var.should == true
           done
         end
       end
@@ -150,7 +154,7 @@ shared_examples_for "EventedSpec adapter" do
           :this.should == :fail
         end
       }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
-      loop_running?.should be_false
+      loop_running?.should == false
     end
   end
 end
