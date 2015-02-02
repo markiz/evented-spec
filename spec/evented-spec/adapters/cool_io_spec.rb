@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe EventedSpec::SpecHelper, "Cool.io bindings", :nojruby => true do
+describe EventedSpec::SpecHelper, "Cool.io bindings", :nojruby => true, :no18 => true do
   include EventedSpec::SpecHelper
   default_timeout 1
 

@@ -33,6 +33,6 @@ group :test do
   gem 'minitest', :require => nil
 
   gem "eventmachine"
-  gem "cool.io",             :platforms => :ruby
+  gem "cool.io",             :platforms => [:ruby_19, :ruby_20]
   custom_gem "amqp", :git => "git://github.com/ruby-amqp/amqp.git", :branch => "master"
 end
