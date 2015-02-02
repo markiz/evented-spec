@@ -10,3 +10,8 @@ env:
   - RSPEC="2.5.0"
   - RSPEC="3.1.0"
 script: "bundle exec rake spec:ci"
+services:
+  - rabbitmq
+notifications:
+  recipients:
+    - markizko@gmail.com
