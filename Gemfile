@@ -15,6 +15,7 @@ group :development do
   gem "yard"
   gem "RedCloth", "~> 4.2.9"
   gem "pry"
+  gem "rdoc", '>= 4.2.0'
 end
 
 group :test do

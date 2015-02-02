@@ -1,6 +1,6 @@
 require "spec_helper"
 
-if !(RUBY_PLATFORM =~ /java/)
+if !(RUBY_PLATFORM =~ /java/ || RUBY_VERSION =~ /^1\.8/)
   describe "EventedSpec cool.io bindings" do
     def coolio_running?
       !!Coolio::Loop.default.instance_variable_get(:@running)

@@ -5,13 +5,12 @@ Bundler.require :default, :test
 require 'yaml'
 require 'evented-spec'
 require 'evented-spec/adapters/adapter_seg'
-
 require 'amqp'
 begin
   require 'cool.io'
 rescue LoadError => e
-  if RUBY_PLATFORM =~ /java/
-    puts "Cool.io is unavailable for jruby"
+  if RUBY_PLATFORM =~ /java/ || RUBY_VERSION =~ /^1\.8/
+    puts "Cool.io is unavailable for jruby and 1.8"
   else
     # cause unknown, reraise
     raise e
@@ -22,14 +21,17 @@ end
 def done
 end
 
+require 'rspec/core'
+require 'rspec/mocks'
+require 'rspec/expectations'
 RSpec.configure do |c|
   c.filter_run_excluding :nojruby => true if RUBY_PLATFORM =~ /java/
   c.filter_run_excluding :no18 => true if RUBY_VERSION =~ /^1\.8/
   c.filter_run_excluding :deliberately_failing => true if ENV["EXCLUDE_DELIBERATELY_FAILING_SPECS"]
-
+  p c.methods - Object.methods
   if RSpec::Core::Version::STRING >= '3.0.0'
-    c.expect_with :rspec do |c|
-      c.syntax = [:should, :expect]
+    c.expect_with :rspec do |expectations|
+      expectations.syntax = [:should, :expect]
     end
 
     c.mock_with :rspec do |mocks|
